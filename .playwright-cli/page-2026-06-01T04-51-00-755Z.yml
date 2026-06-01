@@ -1,8 +1,0 @@
-- generic [ref=e3]:
-  - generic [ref=e4]:
-    - generic [ref=e5]: 2026年6月1日星期一
-    - generic [ref=e6]: 12:51:00
-  - generic [ref=e7]:
-    - heading "欢迎" [level=1] [ref=e8]
-    - paragraph [ref=e9]: 这是示例页面内容。点击右下角的按钮打开 AI 对话助手。
-  - button "💬" [ref=e10] [cursor=pointer]
