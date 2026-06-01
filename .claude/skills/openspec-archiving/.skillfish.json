@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "openspec-archiving",
+  "owner": "forztf",
+  "repo": "open-skilled-sdd",
+  "path": "skills/openspec-archiving",
+  "branch": "main",
+  "sha": "fb991fd7e98ee98bcdb777f392a39144dbee31ce",
+  "source": "manifest"
+}

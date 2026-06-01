@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.env
+*.local
+
+# 本地技能链接（由 npm run setup:skills 自动创建）
+.claude/commands/

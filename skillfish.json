@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "skills": [
+    "forztf/open-skilled-sdd/skills/openspec-proposal-creation",
+    "forztf/open-skilled-sdd/skills/openspec-implementation",
+    "forztf/open-skilled-sdd/skills/openspec-archiving",
+    "forztf/open-skilled-sdd/skills/openspec-context-loading"
+  ]
+}

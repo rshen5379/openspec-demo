@@ -1,0 +1,15 @@
+{
+  "name": "ai-chat-dialog",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd src/backend && node server.js",
+    "dev:frontend": "cd src/frontend && npm run dev",
+    "install:all": "cd src/frontend && npm install && cd ../../src/backend && npm install",
+    "setup:skills": "node skills/setup-skills/setup-skills.js"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
