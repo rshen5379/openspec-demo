@@ -3,5 +3,19 @@ dist/
 .env
 *.local
 
-# 本地技能链接（由 npm run setup:skills 自动创建）
-.claude/commands/
+# Agent 本地目录（由 skillfish / setup:skills 自动生成）
+.agents/
+.claude/
+.codex/
+.codebuddy/
+.github/
+.gemini/
+.cursor/
+.windsurf/ 
+.aider/
+.continue/ 
+.vscode/
+
+# Playwright CLI 本地缓存
+.playwright-cli/
+.playwright-mcp/

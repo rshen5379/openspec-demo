@@ -20,16 +20,6 @@
 | 加载上下文 | `/openspec-context-loading` | — |
 | 探索讨论 | `/openspec-explore` | ~~`/opsx:explore`~~ |
 
-### 适用范围
-
-此规则适用于所有代码修改，包括但不限于：
-- 新功能开发
-- Bug 修复
-- UI 调整
-- 重构
-- 配置变更
-- 样式修改
-
 ### 例外情况
 
 以下情况可以不经过 OpenSpec 流程：
@@ -37,68 +27,38 @@
 - 紧急热修复（事后必须补提 proposal）
 - 用户明确要求跳过 OpenSpec 流程
 
-### 效率技能（所有 Agent 通用）
+### 效率技能
 
-以下技能定义在 `skills/` 文件夹，通过 `/斜杠命令` 触发。详细流程见各 `skills/{技能名}/SKILL.md`。
+通过 `/斜杠命令` 触发，详细流程见各 `skills/{技能名}/SKILL.md`。
 
-| 技能 | 触发词 | 说明 |
-|------|--------|------|
-| `dev-verify` | "验证改动"、"检查页面"、"看看效果" | 启动 dev server → 截图 → 检查控制台 → 输出报告 |
-| `quick-fix` | "快速修复"、"小 bug"、"hotfix" | 简化 OpenSpec 流程，定位 Bug 并生成精简提案 |
-| `test-gen` | "生成测试"、"写测试"、"添加测试" | 扫描 React 组件，自动生成 Vitest 测试 |
-| `setup-skills` | "链接技能"、"symlink"、"删除技能"、"移除技能" | 管理 Agent 目录、创建/移除技能 symlink |
+| 技能 | 触发词 |
+|------|--------|
+| `dev-verify` | "验证改动"、"检查页面"、"看看效果" |
+| `quick-fix` | "快速修复"、"小 bug"、"hotfix" |
+| `test-gen` | "生成测试"、"写测试"、"添加测试" |
+| `setup-skills` | "链接技能"、"symlink"、"删除技能"、"移除技能" |
+
+### tasks.md 格式规范（强制）
+
+```markdown
+## 1. 分组标题
+
+- [ ] 1.1 具体任务描述
+- [x] 1.2 已完成的任务
+
+## N. 验证
+
+- [ ] N.1 验证任务
+```
+
+**规则**：
+- 分组标题使用 `## N. 标题` 格式（连续数字）
+- 任务项使用 `- [ ] N.M 描述` checkbox 格式
+- 最后一个分组必须是验证任务
 
 ### 禁止行为
 
 - 不得在没有 proposal 的情况下直接修改代码
 - 不得跳过 tasks.md 中的任务检查项
 - 不得在未归档的情况下开始新的变更
-
-## 团队环境搭建
-
-### 前置条件
-
-安装 skillfish（AI 技能管理器，支持 33+ Agent）：
-
-```bash
-# 全局安装（推荐，可使用 list/update/bundle 等命令）
-npm i -g skillfish
-
-# 或免安装直接使用（仅支持 add 命令）
-npx skillfish add owner/repo
-```
-
-### Clone 后一键初始化
-
-```bash
-npm run install:all                                    # 安装前后端依赖
-skillfish install                                      # 安装外部技能（OpenSpec 等）
-node skills/setup-skills/setup-skills.js --init        # 初始化 Agent 目录
-node skills/setup-skills/setup-skills.js               # 为本地技能创建 symlink
-```
-
-### 外部技能（skillfish）
-
-清单文件：`skillfish.json`（已提交 git）。
-
-```bash
-skillfish install          # 安装所有外部技能
-skillfish add owner/repo   # 新增技能
-skillfish bundle           # 更新清单
-skillfish update           # 更新到最新版本
-```
-
-### 本地技能（`skills/`）
-
-本地技能通过 `setup-skills` 技能管理（`/setup-skills`），详细用法见 `skills/setup-skills/SKILL.md`。
-
-- 新增：在 `skills/` 下创建目录 + `SKILL.md`，然后重新运行 symlink
-- 移除：`--remove` 只删 symlink 不删源文件
-- Windows 需开启开发者模式
-
-### 技能体系总览
-
-| 类型 | 来源 | 安装方式 | 斜杠命令 |
-|------|------|---------|---------|
-| 外部技能 | skillfish (GitHub) | `skillfish install` | ✅ 直接可用 |
-| 本地技能 | `skills/` 文件夹 | `setup-skills` 创建 symlink | ✅ 创建链接后可用 |
+- 不得生成不符合格式规范的 tasks.md

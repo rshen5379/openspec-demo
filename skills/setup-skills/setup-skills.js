@@ -11,7 +11,8 @@
  *   node skills/setup-skills/setup-skills.js --init       # 初始化 Agent 目录（未检测到时自动触发）
  *   node skills/setup-skills/setup-skills.js --init --all # 强制初始化所有支持 Agent 的目录
  *   node skills/setup-skills/setup-skills.js --agent cursor  # 仅为指定 Agent 操作
- *   node skills/setup-skills/setup-skills.js --clean      # 清除所有 Agent 的技能链接
+ *   node skills/setup-skills/setup-skills.js --clean             # 清除所有 Agent 的技能链接
+ *   node skills/setup-skills/setup-skills.js --clean-external    # 移除所有外部技能（skillfish）
  *   node skills/setup-skills/setup-skills.js --remove xxx # 删除技能（清除链接 + 删除目录）
  *   node skills/setup-skills/setup-skills.js --status     # 查看 Agent 和技能状态
  */
@@ -25,6 +26,7 @@ const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
 const SKILLS_DIR = path.join(PROJECT_ROOT, 'skills');
 const isWindows = process.platform === 'win32';
 const isClean = process.argv.includes('--clean');
+const isCleanExternal = process.argv.includes('--clean-external');
 const isInit = process.argv.includes('--init');
 const isInitAll = process.argv.includes('--all');
 const isStatus = process.argv.includes('--status');
@@ -242,6 +244,41 @@ function cleanLinks() {
   }
 }
 
+// ─── 清除所有外部技能 ────────────────────────────────────
+function cleanExternalSkills() {
+  const externalNames = getExternalSkillNames();
+
+  if (externalNames.length === 0) {
+    log('ℹ', 'skillfish.json 中没有外部技能');
+    return;
+  }
+
+  console.log(`  🗑  清除所有外部技能 (${externalNames.length} 个): ${externalNames.join(', ')}`);
+  console.log('');
+
+  let removed = 0;
+  let failed = 0;
+
+  for (const name of externalNames) {
+    try {
+      execSync(`skillfish remove ${name} --project --yes`, {
+        cwd: PROJECT_ROOT,
+        stdio: 'pipe',
+      });
+      log('✔', `已移除: ${name}`);
+      removed++;
+    } catch (err) {
+      log('✖', `移除失败: ${name} — ${err.message}`);
+      failed++;
+    }
+  }
+
+  console.log('');
+  console.log('────────────────────────────');
+  console.log(`  移除: ${removed}  失败: ${failed}`);
+  console.log('────────────────────────────');
+}
+
 // ─── 删除技能 ──────────────────────────────────────────
 function getExternalSkillNames() {
   const manifestPath = path.join(PROJECT_ROOT, 'skillfish.json');
@@ -435,6 +472,8 @@ if (isStatus) {
   showStatus();
 } else if (isRemove) {
   removeSkill(removeTarget);
+} else if (isCleanExternal) {
+  cleanExternalSkills();
 } else if (isClean) {
   cleanLinks();
 } else if (isInit) {
