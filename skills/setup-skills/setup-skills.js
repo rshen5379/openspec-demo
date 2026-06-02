@@ -49,13 +49,13 @@ const AGENTS = [
     detect: ['.claude'],
     description: 'Anthropic 官方 CLI Agent',
   },
-  {
-    name: 'Cursor',
-    baseDir: '.cursor',
-    skillsSubDir: 'skills',
-    detect: ['.cursor'],
-    description: 'AI-first 代码编辑器',
-  },
+  // {
+  //   name: 'Cursor',
+  //   baseDir: '.cursor',
+  //   skillsSubDir: 'skills',
+  //   detect: ['.cursor'],
+  //   description: 'AI-first 代码编辑器',
+  // },
   {
     name: 'Codex',
     baseDir: '.codex',
@@ -63,13 +63,13 @@ const AGENTS = [
     detect: ['.codex'],
     description: 'OpenAI Codex CLI',
   },
-  {
-    name: 'GitHub Copilot',
-    baseDir: '.github',
-    skillsSubDir: 'skills',
-    detect: ['.github'],
-    description: 'GitHub Copilot Coding Agent',
-  },
+  // {
+  //   name: 'GitHub Copilot',
+  //   baseDir: '.github',
+  //   skillsSubDir: 'skills',
+  //   detect: ['.github'],
+  //   description: 'GitHub Copilot Coding Agent',
+  // },
   {
     name: 'Gemini CLI',
     baseDir: '.gemini',
@@ -77,13 +77,13 @@ const AGENTS = [
     detect: ['.gemini'],
     description: 'Google Gemini CLI Agent',
   },
-  {
-    name: 'OpenCode',
-    baseDir: '.opencode',
-    skillsSubDir: 'skills',
-    detect: ['.opencode'],
-    description: 'OpenCode Agent',
-  },
+  // {
+  //   name: 'OpenCode',
+  //   baseDir: '.opencode',
+  //   skillsSubDir: 'skills',
+  //   detect: ['.opencode'],
+  //   description: 'OpenCode Agent',
+  // },
   {
     name: 'CodeBuddy',
     baseDir: '.codebuddy',
@@ -432,18 +432,39 @@ function createLinks() {
         if (isWindows) {
           const winLink = linkPath.replace(/\//g, '\\');
           const winTarget = sourcePath.replace(/\//g, '\\');
-          execSync(`mklink /D "${winLink}" "${winTarget}"`, {
-            shell: 'cmd',
-            stdio: 'pipe',
-          });
+          const mklinkCmd = `mklink /J "${winLink}" "${winTarget}"`;
+          try {
+            execSync(mklinkCmd, { shell: 'cmd', stdio: 'pipe' });
+          } catch {
+            // 普通权限失败时尝试 gsudo 提权
+            try {
+              execSync(`gsudo cmd /c "${mklinkCmd}"`, { stdio: 'pipe' });
+            } catch {
+              execSync(mklinkCmd, { shell: 'cmd', stdio: 'pipe' });
+            }
+          }
         } else {
           fs.symlinkSync(sourcePath, linkPath);
+        }
+        // 验证链接是否可解析
+        const verifyFile = path.join(linkPath, 'SKILL.md');
+        if (!fs.existsSync(verifyFile)) {
+          log('  ✖', `验证失败: ${name}（链接创建但无法解析目标）`);
+          try {
+            if (isWindows) {
+              execSync(`rmdir "${linkPath.replace(/\//g, '\\')}"`, { shell: 'cmd', stdio: 'pipe' });
+            } else {
+              fs.unlinkSync(linkPath);
+            }
+          } catch {}
+          stats.failed++;
+          continue;
         }
         log('  ✔', `已创建: ${name}`);
         stats.created++;
       } catch (err) {
         log('  ✖', `失败: ${name} — ${err.message}`);
-        if (isWindows && err.message.includes('权限')) {
+        if (isWindows && (err.message.includes('权限') || err.message.includes('denied'))) {
           log('  ℹ', '提示: Windows 需开启"开发者模式"（设置 → 系统 → 开发者选项）');
         }
         stats.failed++;
