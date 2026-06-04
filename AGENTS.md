@@ -36,7 +36,7 @@
 | `dev-verify` | "验证改动"、"检查页面"、"看看效果" |
 | `quick-fix` | "快速修复"、"小 bug"、"hotfix" |
 | `test-gen` | "生成测试"、"写测试"、"添加测试" |
-| `setup-skills` | "链接技能"、"symlink"、"删除技能"、"移除技能" |
+| `setup-skills` | "链接技能"、"symlink"、"删除技能"、"移除技能" | "初始化技能"
 
 ### tasks.md 格式规范（强制）
 
