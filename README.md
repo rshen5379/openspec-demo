@@ -18,6 +18,21 @@
 | 查看状态 | "链接技能状态" |
 | 移除技能 | "移除技能 \<名称\>" |
 
+### Skillfish 命令参考
+
+| 命令 | 说明 |
+|------|------|
+| `skillfish add <repo>/<skill-path>` | 从 GitHub 仓库安装技能到项目 |
+| `skillfish install --project -y` | 根据 `skillfish.json` 清单安装所有已声明技能 |
+| `skillfish bundle --project` | 扫描已安装技能，更新 `skillfish.json` 清单 |
+| `skillfish bundle --global` | 扫描全局已安装技能，更新 `~/skillfish.json` |
+| `skillfish list` | 列出所有 Agent 中已安装的技能 |
+| `skillfish remove <skill>` | 移除已安装的技能 |
+| `skillfish update` | 检查并更新已安装的技能 |
+| `skillfish search <query>` | 在注册表中搜索技能 |
+
+> **`install` vs `bundle`**：`install` 从 JSON 读 → 写磁盘（拉取），`bundle` 从磁盘读 → 写 JSON（快照）。手动 `add` 技能后运行 `bundle` 即可同步清单。
+
 ## 项目结构
 
 ```
