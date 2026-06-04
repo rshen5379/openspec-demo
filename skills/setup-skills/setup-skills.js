@@ -45,7 +45,7 @@ const AGENTS = [
   {
     name: 'Claude Code',
     baseDir: '.claude',
-    skillsSubDir: 'commands',
+    skillsSubDir: 'skills',
     detect: ['.claude'],
     description: 'Anthropic 官方 CLI Agent',
   },
