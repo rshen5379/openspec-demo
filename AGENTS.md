@@ -6,9 +6,10 @@
 
 ### 工作流程
 
-1. **收到代码修改请求时**，使用 OpenSpec 技能创建 proposal：`/openspec-proposal-creation`
-2. **Proposal 获得批准后**，使用 OpenSpec 技能实施任务：`/openspec-implementation`
-3. **实施完成后**，使用 OpenSpec 技能归档变更：`/openspec-archiving`
+1. **收到代码修改请求时**，先使用 OpenSpec 技能探索需求：`/openspec-explore`
+2. **需求明确后**，使用 OpenSpec 技能创建 proposal：`/openspec-proposal-creation`
+3. **Proposal 获得批准后**，使用 OpenSpec 技能实施任务：`/openspec-implementation`
+4. **实施完成后**，使用 OpenSpec 技能归档变更：`/openspec-archiving`
 
 ### 技能名称对照表（禁止使用 /opsx 指令）
 
@@ -37,6 +38,7 @@
 | `quick-fix` | "快速修复"、"小 bug"、"hotfix" |
 | `test-gen` | "生成测试"、"写测试"、"添加测试" |
 | `setup-skills` | "链接技能"、"symlink"、"删除技能"、"移除技能" | "初始化技能"
+| `init-project` | "初始化项目"、"init project"、"新建 openspec"、"add openspec" |
 
 ### tasks.md 格式规范（强制）
 

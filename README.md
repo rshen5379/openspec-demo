@@ -6,11 +6,22 @@
 
 ---
 
-## 🚀 从模板创建你自己的项目
+## 🚀 两种使用方式
 
-如果你是 **0→1** 的开发者，想用这个项目作为基座开始新项目，按以下步骤操作：
+```
+方式 A: 0 → 1（从模板创建新项目）     方式 B: 1 → 2（已有项目引入 OpenSpec）
+┌────────────────────────────┐      ┌────────────────────────────────────┐
+│ 复制整个模板                │      │ 从模板中挑选文件，加入你的项目       │
+│ 删演示代码，保留基座设施     │      │ 不动现有代码，只加 OpenSpec 层      │
+│ 适合：新项目                │      │ 适合：已有代码库                    │
+└────────────────────────────┘      └────────────────────────────────────┘
+```
 
-### 第一步：复制项目
+---
+
+### 方式 A：0 → 1 从模板创建新项目
+
+#### 第一步：复制项目
 
 ```bash
 # 方式 A：直接复制（保留 git 历史）
@@ -22,7 +33,7 @@ git remote remove origin           # 移除原仓库关联
 rm -rf .git && git init
 ```
 
-### 第二步：识别哪些文件属于"基座"、哪些属于"演示"
+#### 第二步：识别哪些文件属于"基座"、哪些属于"演示"
 
 **保留（基座设施）**：
 ```
@@ -47,7 +58,7 @@ openspec/specs/            # ← 删除演示 spec，创建你自己的
 openspec/changes/archive/  # ← 删除演示归档（可选保留作参考）
 ```
 
-### 第三步：修改 3 个文件
+#### 第三步：修改 3 个文件
 
 **1. `openspec/config.yaml`** — 填入你的项目上下文：
 
@@ -71,7 +82,7 @@ rm -rf openspec/specs/ai-chat openspec/specs/date-display
 rm -rf openspec/changes/archive/*    # 可选：清空演示归档
 ```
 
-### 第四步：初始化技能
+#### 第四步：初始化技能
 
 ```bash
 npm run install:all                                    # 安装依赖
@@ -80,11 +91,177 @@ skillfish install --project -y                         # 安装外部技能
 node skills/setup-skills/setup-skills.js               # 创建 symlink
 ```
 
-### 第五步：开始开发
+#### 第五步：开始开发
 
 对 Agent 说第一个需求，例如：*"我想添加用户登录功能"*，Agent 会自动触发 `/openspec-proposal-creation` 创建提案。
 
 > 📖 详细指南见 [TEMPLATE_GUIDE.md](TEMPLATE_GUIDE.md)
+
+---
+
+### 方式 B：1 → 2 已有项目引入 OpenSpec
+
+**你的场景**：已有一个运行中的项目，想要加入 OpenSpec 工作流来规范 AI Agent 辅助开发。
+
+**你需要做的**：从模板中提取 6 个文件/目录，放入你的项目根目录，然后适配。
+
+#### 第一步：复制基座文件
+
+```bash
+# 在你的项目根目录执行（替换 <openspec-demo-path> 为模板路径）
+cp -r <openspec-demo-path>/openspec   ./openspec
+cp -r <openspec-demo-path>/skills     ./skills
+cp    <openspec-demo-path>/AGENTS.md  ./AGENTS.md
+cp    <openspec-demo-path>/skillfish.json ./skillfish.json
+```
+
+复制后的目录结构：
+```
+你的项目/
+├── openspec/              ← 新增：变更管理框架
+│   ├── config.yaml           ← 需要修改
+│   ├── specs/
+│   └── changes/archive/
+├── skills/                ← 新增：本地技能
+│   ├── setup-skills/
+│   ├── dev-verify/
+│   ├── quick-fix/
+│   └── test-gen/
+├── AGENTS.md              ← 新增：工作流强制规则
+├── skillfish.json         ← 新增：外部技能清单
+│
+├── src/                   ← 你的代码（不动）
+├── package.json           ← 你的（需要小改）
+├── CLAUDE.md              ← 你的（需要合并）
+└── ...
+```
+
+#### 第二步：清理演示数据
+
+```bash
+# 删除演示 spec 和归档（这些不是你的项目）
+rm -rf openspec/specs/ai-chat openspec/specs/date-display
+rm -rf openspec/changes/archive/*
+```
+
+#### 第三步：修改 4 个地方
+
+**1. `openspec/config.yaml`** — 填入你的项目上下文：
+
+```yaml
+schema: spec-driven
+context: |
+  Tech stack: Next.js 14 + TypeScript + Tailwind CSS + PostgreSQL
+  Language: TypeScript (strict mode)
+  ORM: Prisma
+  Auth: NextAuth.js
+  API: Next.js API Routes (App Router)
+  Conventions: Conventional commits, ESLint + Prettier
+```
+
+**2. `CLAUDE.md`** — 在你现有的 CLAUDE.md 中**追加**以下段落：
+
+```markdown
+## 强制规则（AGENTS.md）
+
+**所有代码修改必须遵循 OpenSpec 工作流**，除非属于例外情况（纯文档、紧急热修复、用户明确跳过）。
+
+流程：`/openspec-proposal-creation` → 用户批准 → `/openspec-implementation` → `/openspec-archiving`
+
+## OpenSpec 结构
+
+openspec/
+├── config.yaml       # 项目上下文
+├── specs/            # 活规格文档（需求真相源）
+└── changes/          # 变更提案
+    └── archive/      # 已归档
+
+## 本地技能
+
+| 技能 | 触发词 | 用途 |
+|------|--------|------|
+| `dev-verify` | "看看效果"、"验证改动" | 启动 dev server + 验证页面 |
+| `quick-fix` | "快速修复"、"hotfix" | 精简 OpenSpec 修复 bug |
+| `test-gen` | "生成测试" | 自动生成测试 |
+| `setup-skills` | "初始化技能" | 安装依赖、创建 symlink |
+
+## 代码修改定位参考
+
+| 问题类型 | 关键文件 |
+|----------|----------|
+| （按你的项目填写） | |
+```
+
+**3. `package.json`** — 追加一个 script：
+
+```json
+{
+  "scripts": {
+    "...": "你现有的 scripts",
+    "setup:skills": "node skills/setup-skills/setup-skills.js --init && skillfish install --project -y && node skills/setup-skills/setup-skills.js"
+  }
+}
+```
+
+**4. `.gitignore`** — 追加 Agent 目录忽略（如果还没有）：
+
+```
+# AI Agent directories
+.claude/
+.codex/
+.gemini/
+.codebuddy/
+.playwright-cli/
+```
+
+#### 第四步：初始化技能
+
+```bash
+npm run setup:skills
+```
+
+这会自动：初始化 Agent 目录 → 安装外部技能 → 创建 symlink。
+
+#### 第五步：编写第一个 spec
+
+为你的项目创建第一个活规格文档。先写最核心的功能：
+
+```bash
+mkdir -p openspec/specs/user-management
+```
+
+```markdown
+<!-- openspec/specs/user-management/spec.md -->
+
+# User Management
+
+### Requirement: User Registration
+WHEN a new user submits the registration form with valid data,
+the system SHALL create an account and send a verification email.
+
+#### Scenario: Successful Registration
+GIVEN no existing user with email "new@example.com"
+WHEN the user submits registration with email and password
+THEN the system creates a new user record
+AND sends a verification email
+```
+
+#### 第六步：开始使用
+
+对 Agent 说你的第一个变更需求。Agent 会读取 `AGENTS.md`，自动走 OpenSpec 流程。
+
+> 💡 **关键**：你不需要改动任何现有代码。OpenSpec 是一层"管理框架"，叠加在项目之上，通过 `AGENTS.md` 约束 Agent 行为。
+
+#### 注意事项
+
+| 问题 | 解决 |
+|------|------|
+| 已有 `.claude/` 目录 | 正常——`setup-skills.js` 会在现有 `.claude/skills/` 下添加 symlink |
+| 已有 `CLAUDE.md` | 追加 OpenSpec 段落，不要覆盖你现有的内容 |
+| 已有 `.gitignore` | 追加忽略规则，避免 Agent 目录被提交 |
+| 本地技能不匹配 | `dev-verify` / `quick-fix` / `test-gen` 可按需修改或删除，只保留 `setup-skills` 即可 |
+| 项目没有 `concurrently` 依赖 | `npm install -D concurrently`，或直接用分步命令代替 `npm run dev` |
+| `skills/` 下的技能不适用你的项目 | 删除不适用的，保留 `setup-skills`。其他技能是可选的便利工具 |
 
 ---
 

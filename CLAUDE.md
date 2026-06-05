@@ -72,6 +72,7 @@ openspec/
 
 | 技能 | 触发词 | 用途 |
 |------|--------|------|
+| `init-project` | "初始化项目"、"init project" | 交互式引导从模板创建新项目或为已有项目添加 OpenSpec |
 | `dev-verify` | "看看效果"、"验证改动" | 启动 dev server + Playwright 检查页面 |
 | `quick-fix` | "快速修复"、"hotfix" | 精简 OpenSpec 流程定位修复 bug |
 | `test-gen` | "生成测试" | 自动生成 Vitest 测试 |
