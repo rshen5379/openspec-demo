@@ -4,6 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目概述
 
+<!-- TODO: 替换为你的项目描述 -->
 AI 对话应用示例项目，使用 OpenSpec 工作流管理变更。前端 React + Vite，后端 Express + OpenAI SDK，通过 SSE 实现流式响应。
 
 ## 强制规则（AGENTS.md）
@@ -18,6 +19,7 @@ tasks.md 格式：分组用 `## N. 标题`，任务项用 `- [ ] N.M 描述` che
 
 ## 开发命令
 
+<!-- TODO: 替换为你的项目命令 -->
 ```bash
 # 安装所有依赖
 npm run install:all
@@ -40,6 +42,7 @@ cd src/frontend && npm run build
 
 ## 架构
 
+<!-- TODO: 替换为你的项目架构描述 -->
 **单组件 SPA**：整个前端应用在 `src/frontend/src/App.jsx` 中，无路由、无状态管理库。所有 UI 组件（Avatar、MessageBubble、TypingIndicator、ThemeToggle、DateDisplay）定义在同一文件中，使用内联样式。
 
 **主题系统**：`themes.js` 定义 dark/light 两套颜色对象，`useTheme.js` 通过 localStorage 持久化选择，默认跟随系统偏好。
@@ -57,9 +60,10 @@ cd src/frontend && npm run build
 
 ```
 openspec/
-├── specs/           # 活规格（ai-chat、date-display）
-└── changes/         # 进行中的变更提案
-    └── archive/     # 已归档变更
+├── config.yaml       # OpenSpec 配置（项目上下文）
+├── specs/            # 活规格文档（需求真相源）
+└── changes/          # 进行中的变更提案
+    └── archive/      # 已归档变更（spec-delta 已合并到 specs/）
 ```
 
 规格文档使用 Given/When/Then 场景格式描述需求。
@@ -75,6 +79,7 @@ openspec/
 
 ## 代码修改定位参考
 
+<!-- TODO: 替换为你的项目文件定位表 -->
 | 问题类型 | 关键文件 |
 |----------|----------|
 | UI 样式/布局 | `App.jsx` + `themes.js` |

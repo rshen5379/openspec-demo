@@ -1,13 +1,16 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+# 项目上下文（强烈建议填写）
+# OpenSpec 技能创建 proposal 时依赖此上下文来理解项目。
+# 不填写时 AI 会从代码推断，效果不稳定。
+# TODO: 替换为你的项目信息
+context: |
+  Tech stack: React 18 + Vite 5 (frontend), Express 4 + OpenAI SDK (backend)
+  Language: JavaScript (ES2022+)
+  Frontend: Single-file SPA in App.jsx, inline styles, localStorage persistence
+  Backend: SSE streaming via POST /api/chat
+  Styling: No CSS framework, theme system via themes.js/useTheme.js
+  Conventions: All code changes must follow OpenSpec workflow
 
 # Per-artifact rules (optional)
 # Add custom rules for specific artifacts.
