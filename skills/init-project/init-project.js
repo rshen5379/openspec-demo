@@ -27,6 +27,8 @@ const COPY_EXCLUSIONS = new Set([
   '.codex',
   '.gemini',
   '.codebuddy',
+  '.agent',
+  '.agents',
   '_cc_temp',
   '.DS_Store',
   'Thumbs.db',
@@ -108,6 +110,12 @@ function copyDirRecursive(src, dest, exclusions) {
 
     const srcPath = path.join(src, entry.name);
     const destPath = path.join(dest, entry.name);
+
+    if (entry.isSymbolicLink()) {
+      // 跳过符号链接：Windows 下 copyFileSync 对符号链接会报 EPERM，
+      // 且这些链接通常是 setup:skills 等运行时生成的，新项目应自行重建
+      continue;
+    }
 
     if (entry.isDirectory()) {
       copyDirRecursive(srcPath, destPath, exclusions);
