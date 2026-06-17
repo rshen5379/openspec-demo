@@ -7,9 +7,10 @@ export function createAIService() {
   })
   const model = process.env.OPENAI_MODEL || 'gpt-4o-mini'
 
-  async function* streamChat(messages) {
+  async function* streamChat(messages, requestedModel) {
+    const useModel = requestedModel || model
     const stream = await client.chat.completions.create({
-      model,
+      model: useModel,
       messages,
       stream: true
     })

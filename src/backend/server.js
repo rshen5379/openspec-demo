@@ -14,8 +14,25 @@ const aiService = createAIService()
 app.use(cors())
 app.use(express.json())
 
+function getAvailableModels() {
+  const defaultModel = process.env.OPENAI_MODEL || 'gpt-4o-mini'
+  const available = process.env.AVAILABLE_MODELS
+  if (!available) {
+    return [{ id: defaultModel, name: defaultModel.toUpperCase() }]
+  }
+  return available.split(',').map(m => {
+    const id = m.trim()
+    const name = id.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+    return { id, name }
+  })
+}
+
+app.get('/api/models', (req, res) => {
+  res.json(getAvailableModels())
+})
+
 app.post('/api/chat', async (req, res) => {
-  const { messages } = req.body
+  const { messages, model } = req.body
 
   if (!messages || !Array.isArray(messages) || messages.length === 0) {
     return res.status(400).json({ error: 'messages is required' })
@@ -26,7 +43,7 @@ app.post('/api/chat', async (req, res) => {
   res.setHeader('Connection', 'keep-alive')
 
   try {
-    for await (const token of aiService.streamChat(messages)) {
+    for await (const token of aiService.streamChat(messages, model)) {
       res.write(`data: ${JSON.stringify({ token })}\n\n`)
     }
     res.write('data: [DONE]\n\n')
